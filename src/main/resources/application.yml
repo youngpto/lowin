@@ -1,0 +1,11 @@
+lowin:
+  routeRules:
+    - routePath: /hello/**
+      ruleName: lowin
+    - routePath: /in/**
+      ruleName: kk
+    - routePath: /**
+      ruleName: lowin
+logging:
+  level:
+    com.young.lowin: debug

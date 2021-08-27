@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.young.lowin.config.LowInSpringWebConfig,\
+  com.young.lowin.config.LowInAutoConfig
