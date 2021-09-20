@@ -17,5 +17,5 @@ import java.util.List;
 @Data
 public class LowInAutoProperties {
 
-    List<RouteRule> routeRules;
+    private List<RouteRule> routeRules;
 }

@@ -7,16 +7,12 @@ import java.lang.annotation.Target;
 
 /**
  * Created with IntelliJ IDEA.
- * Description: 限制角色访问
+ * Description:
  * Author: young
- * Date: 2021-08-26
- * Time: 19:21
+ * Date: 2021-09-20
+ * Time: 8:12
  */
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD,ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface RequiredRoles {
-
-    String[] value() default {};
-
-    Logical logical() default Logical.OR;
+public @interface EnableAuthModel {
 }

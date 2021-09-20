@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RequiredPermissions {
 
-    String[] value();
+    String[] value() default {};
 
     Logical logical() default Logical.OR;
 }
