@@ -197,6 +197,60 @@ public class ConditionLink extends Condition implements IQueryAuth {
         return judge(Logical.AND, targetAuth, method);
     }
 
+    public ConditionLink findOne(Logical logical,String targetAuth) {
+        conditionLinkedList.add(ConditionNode.conditionNode(logical, targetAuth, this::findOne));
+        return this;
+    }
+
+    public ConditionLink findOne(String targetAuth) {
+        return findOne(Logical.AND, targetAuth);
+    }
+
+    public ConditionLink notFindOne(Logical logical, String targetAuth) {
+        conditionLinkedList.add(ConditionNode.conditionNode(logical, targetAuth, this::notFindOne));
+        return this;
+    }
+
+    public ConditionLink notFindOne(String targetAuth) {
+        return notFindOne(Logical.AND, targetAuth);
+    }
+
+    public ConditionLink first(Logical logical,String targetAuth) {
+        conditionLinkedList.add(ConditionNode.conditionNode(logical, targetAuth, this::first));
+        return this;
+    }
+
+    public ConditionLink first(String targetAuth) {
+        return first(Logical.AND, targetAuth);
+    }
+
+    public ConditionLink notFirst(Logical logical, String targetAuth) {
+        conditionLinkedList.add(ConditionNode.conditionNode(logical, targetAuth, this::notFirst));
+        return this;
+    }
+
+    public ConditionLink notFirst(String targetAuth) {
+        return notFirst(Logical.AND, targetAuth);
+    }
+
+    public ConditionLink last(Logical logical,String targetAuth) {
+        conditionLinkedList.add(ConditionNode.conditionNode(logical, targetAuth, this::last));
+        return this;
+    }
+
+    public ConditionLink last(String targetAuth) {
+        return last(Logical.AND, targetAuth);
+    }
+
+    public ConditionLink notLast(Logical logical, String targetAuth) {
+        conditionLinkedList.add(ConditionNode.conditionNode(logical, targetAuth, this::notLast));
+        return this;
+    }
+
+    public ConditionLink notLast(String targetAuth) {
+        return notLast(Logical.AND, targetAuth);
+    }
+
     @Override
     public boolean execute(Set<String> currentAuth) {
         for (Condition condition : conditionLinkedList) {

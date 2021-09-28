@@ -4,7 +4,10 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.young.lowin.model.AuthModel;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created with IntelliJ IDEA.
@@ -135,5 +138,46 @@ public interface IQueryAuth {
 
     default boolean notAnyLikeRight(Set<String> currentAuth, String targetAuth) {
         return !anyLikeRight(currentAuth, targetAuth);
+    }
+
+    default boolean findOne(Set<String> currentAuth,String targetAuth) {
+        for (String s : currentAuth) {
+            if (s.equals(targetAuth)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    default boolean notFindOne(Set<String> currentAuth,String targetAuth) {
+        return !findOne(currentAuth, targetAuth);
+    }
+
+    default boolean first(Set<String> currentAuth, String targetAuth) {
+        List<String> list = getList(currentAuth);
+        if (CollUtil.isEmpty(list)) {
+            return false;
+        }
+        return list.get(0).equals(targetAuth);
+    }
+
+    default boolean notFirst(Set<String> currentAuth, String targetAuth) {
+        return !first(currentAuth, targetAuth);
+    }
+
+    default boolean last(Set<String> currentAuth, String targetAuth) {
+        List<String> list = getList(currentAuth);
+        if (CollUtil.isEmpty(list)) {
+            return false;
+        }
+        return list.get(list.size() - 1).equals(targetAuth);
+    }
+
+    default boolean notLast(Set<String> currentAuth, String targetAuth) {
+        return !last(currentAuth, targetAuth);
+    }
+
+    default List<String> getList(Set<String> current) {
+        return new ArrayList<>(current);
     }
 }
