@@ -94,7 +94,7 @@ public class RuleHandler {
         }
         authModel.add("roles", roles).add("permissions", permissions);
 
-        request.setAttribute("auth", authModel);
+//        request.setAttribute("auth", authModel);
         RuleHandler.authModel.set(authModel);
     }
 

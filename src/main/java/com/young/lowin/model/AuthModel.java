@@ -32,6 +32,27 @@ public class AuthModel extends HashMap<String, Object> {
         return this;
     }
 
+    @Override
+    public Object get(Object key) {
+        if (key.equals("roles")) {
+            return getRoles();
+        }
+        if (key.equals("permissions")) {
+            return getPermissions();
+        }
+        return super.get(key);
+    }
+
+    @SuppressWarnings("unchecked")
+    public Set<String> getRoles() {
+        return (Set<String>) super.get("roles");
+    }
+
+    @SuppressWarnings("unchecked")
+    public Set<String> getPermissions() {
+        return (Set<String>) super.get("permissions");
+    }
+
     public boolean hasRules(String... rules) {
         return hasRules(Logical.AND, rules);
     }
@@ -48,14 +69,12 @@ public class AuthModel extends HashMap<String, Object> {
         return checkPermissions(Arrays.stream(permissions).collect(Collectors.toSet()), logical);
     }
 
-    @SuppressWarnings("unchecked")
     public boolean checkRoles(Set<String> custom, Logical logical) {
-        return checkLogical((Set<String>) get("roles"), custom, logical);
+        return checkLogical(getRoles(), custom, logical);
     }
 
-    @SuppressWarnings("unchecked")
     public boolean checkPermissions(Set<String> custom, Logical logical) {
-        return checkLogical((Set<String>) get("permissions"), custom, logical);
+        return checkLogical(getPermissions(), custom, logical);
     }
 
     private boolean checkLogical(Set<String> custom, Set<String> required, Logical logical) {
