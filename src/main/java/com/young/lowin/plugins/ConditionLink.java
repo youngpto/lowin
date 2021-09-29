@@ -31,16 +31,38 @@ public class ConditionLink extends Condition implements IQueryAuth {
         this(true, Logical.AND);
     }
 
+    private void setPrecondition(boolean precondition) {
+        this.precondition = precondition;
+    }
+
+    public ConditionLink precondition(boolean precondition) {
+        setPrecondition(precondition);
+        return this;
+    }
+
     public ConditionLink and(ConditionLink conditionLink) {
-        conditionLink.setLogical(Logical.AND);
+        conditionLink.logical(Logical.AND);
         conditionLinkedList.add(conditionLink);
         return this;
     }
 
+    public ConditionLink and(ConditionLinkAdapter adapter) {
+        ConditionLink conditionLink = new ConditionLink();
+        adapter.conditionLinkLogic(conditionLink);
+        return and(conditionLink);
+    }
+
+
     public ConditionLink or(ConditionLink conditionLink) {
-        conditionLink.setLogical(Logical.OR);
+        conditionLink.logical(Logical.OR);
         conditionLinkedList.add(conditionLink);
         return this;
+    }
+
+    public ConditionLink or(ConditionLinkAdapter adapter) {
+        ConditionLink conditionLink = new ConditionLink();
+        adapter.conditionLinkLogic(conditionLink);
+        return or(conditionLink);
     }
 
     public ConditionLink eq(Logical logical, Set<String> targetAuth) {
@@ -197,7 +219,7 @@ public class ConditionLink extends Condition implements IQueryAuth {
         return judge(Logical.AND, targetAuth, method);
     }
 
-    public ConditionLink findOne(Logical logical,String targetAuth) {
+    public ConditionLink findOne(Logical logical, String targetAuth) {
         conditionLinkedList.add(ConditionNode.conditionNode(logical, targetAuth, this::findOne));
         return this;
     }
@@ -215,7 +237,7 @@ public class ConditionLink extends Condition implements IQueryAuth {
         return notFindOne(Logical.AND, targetAuth);
     }
 
-    public ConditionLink first(Logical logical,String targetAuth) {
+    public ConditionLink first(Logical logical, String targetAuth) {
         conditionLinkedList.add(ConditionNode.conditionNode(logical, targetAuth, this::first));
         return this;
     }
@@ -233,7 +255,7 @@ public class ConditionLink extends Condition implements IQueryAuth {
         return notFirst(Logical.AND, targetAuth);
     }
 
-    public ConditionLink last(Logical logical,String targetAuth) {
+    public ConditionLink last(Logical logical, String targetAuth) {
         conditionLinkedList.add(ConditionNode.conditionNode(logical, targetAuth, this::last));
         return this;
     }
@@ -255,10 +277,18 @@ public class ConditionLink extends Condition implements IQueryAuth {
     public boolean execute(Set<String> currentAuth) {
         for (Condition condition : conditionLinkedList) {
             if (condition.getLogical().equals(Logical.AND)) {
-                precondition = precondition && condition.execute(currentAuth);
+                if (!precondition) {
+                    break;
+                }
+                precondition = condition.execute(currentAuth);
             }
+        }
+        for (Condition condition : conditionLinkedList) {
             if (condition.getLogical().equals(Logical.OR)) {
-                precondition = precondition || condition.execute(currentAuth);
+                if (precondition) {
+                    break;
+                }
+                precondition = condition.execute(currentAuth);
             }
         }
         return precondition;

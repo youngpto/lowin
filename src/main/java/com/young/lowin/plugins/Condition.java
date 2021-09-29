@@ -23,8 +23,13 @@ public abstract class Condition {
         return logical;
     }
 
-    public void setLogical(Logical logical) {
+    private void setLogical(Logical logical) {
         this.logical = logical;
+    }
+
+    public Condition logical(Logical logical) {
+        setLogical(logical);
+        return this;
     }
 
     public abstract boolean execute(Set<String> currentAuth);
