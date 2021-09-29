@@ -20,16 +20,19 @@ public class AuthUtil {
         return RuleHandler.authModel.get();
     }
 
+    @Deprecated
     public static boolean queryRoles(ConditionLink conditionLink, String... currentAuth) {
-        return conditionLink.execute(Arrays.stream(currentAuth).collect(Collectors.toSet()));
+        return query(conditionLink, currentAuth);
     }
 
+    @Deprecated
     public static boolean queryRoles(ConditionLinkAdapter adapter, String... currentAuth) {
         ConditionLink conditionLink = new ConditionLink();
         adapter.conditionLinkLogic(conditionLink);
         return queryRoles(conditionLink, currentAuth);
     }
 
+    @Deprecated
     public static void checkRoles(ConditionLink conditionLink, AuthFunction authFunction, String... currentAuth) {
         if (queryRoles(conditionLink, currentAuth)) {
             if (authFunction != null) {
@@ -38,6 +41,7 @@ public class AuthUtil {
         }
     }
 
+    @Deprecated
     public static void checkRoles(ConditionLinkAdapter adapter, AuthFunction authFunction, String... currentAuth) {
         ConditionLink conditionLink = new ConditionLink();
         adapter.conditionLinkLogic(conditionLink);
@@ -45,7 +49,7 @@ public class AuthUtil {
     }
 
     public static boolean queryRoles(ConditionLink conditionLink) {
-        return conditionLink.execute(RuleHandler.authModel.get().getRoles());
+        return query(RuleHandler.authModel.get().getRoles(), conditionLink);
     }
 
     public static boolean queryRoles(ConditionLinkAdapter adapter) {
@@ -68,16 +72,19 @@ public class AuthUtil {
         checkRoles(conditionLink, authFunction);
     }
 
+    @Deprecated
     public static boolean queryPermissions(ConditionLink conditionLink, String... currentAuth) {
-        return conditionLink.execute(Arrays.stream(currentAuth).collect(Collectors.toSet()));
+        return query(conditionLink, currentAuth);
     }
 
+    @Deprecated
     public static boolean queryPermissions(ConditionLinkAdapter adapter, String... currentAuth) {
         ConditionLink conditionLink = new ConditionLink();
         adapter.conditionLinkLogic(conditionLink);
         return queryPermissions(conditionLink, currentAuth);
     }
 
+    @Deprecated
     public static void checkPermissions(ConditionLink conditionLink, AuthFunction authFunction, String... currentAuth) {
         if (queryRoles(conditionLink, currentAuth)) {
             if (authFunction != null) {
@@ -86,6 +93,7 @@ public class AuthUtil {
         }
     }
 
+    @Deprecated
     public static void checkPermissions(ConditionLinkAdapter adapter, AuthFunction authFunction, String... currentAuth) {
         ConditionLink conditionLink = new ConditionLink();
         adapter.conditionLinkLogic(conditionLink);
@@ -93,7 +101,7 @@ public class AuthUtil {
     }
 
     public static boolean queryPermissions(ConditionLink conditionLink) {
-        return conditionLink.execute(RuleHandler.authModel.get().getPermissions());
+        return query(RuleHandler.authModel.get().getPermissions(), conditionLink);
     }
 
     public static boolean queryPermissions(ConditionLinkAdapter adapter) {
@@ -103,7 +111,7 @@ public class AuthUtil {
     }
 
     public static void checkPermissions(ConditionLink conditionLink, AuthFunction authFunction) {
-        if (queryRoles(conditionLink)) {
+        if (queryPermissions(conditionLink)) {
             if (authFunction != null) {
                 authFunction.authFunction();
             }
@@ -117,6 +125,10 @@ public class AuthUtil {
     }
 
     public static boolean query(Set<String> currentAuth, ConditionLink conditionLink) {
+        if (conditionLink == null) {
+            System.err.println("Warning: condition is null!");
+            return true;
+        }
         return conditionLink.execute(currentAuth);
     }
 
@@ -127,7 +139,7 @@ public class AuthUtil {
     }
 
     public static void check(ConditionLink conditionLink, AuthFunction authFunction, String... currentAuth) {
-        if (queryRoles(conditionLink, currentAuth)) {
+        if (query(conditionLink, currentAuth)) {
             if (authFunction != null) {
                 authFunction.authFunction();
             }
@@ -137,11 +149,11 @@ public class AuthUtil {
     public static void check(ConditionLinkAdapter adapter, AuthFunction authFunction, String... currentAuth) {
         ConditionLink conditionLink = new ConditionLink();
         adapter.conditionLinkLogic(conditionLink);
-        checkPermissions(conditionLink, authFunction, currentAuth);
+        check(conditionLink, authFunction, currentAuth);
     }
 
     public static boolean query(ConditionLink conditionLink, String... currentAuth) {
-        return conditionLink.execute(Arrays.stream(currentAuth).collect(Collectors.toSet()));
+        return query(Arrays.stream(currentAuth).collect(Collectors.toSet()), conditionLink);
     }
 
     public static boolean query(ConditionLinkAdapter adapter, String... currentAuth) {
@@ -151,7 +163,7 @@ public class AuthUtil {
     }
 
     public static void check(ConditionLink conditionLink, AuthFunction authFunction) {
-        if (queryRoles(conditionLink)) {
+        if (query(conditionLink)) {
             if (authFunction != null) {
                 authFunction.authFunction();
             }
