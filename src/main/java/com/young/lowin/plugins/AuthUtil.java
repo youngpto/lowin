@@ -2,6 +2,8 @@ package com.young.lowin.plugins;
 
 import com.young.lowin.interceptor.RuleHandler;
 import com.young.lowin.model.AuthModel;
+import com.young.lowin.plugins.condition.ConditionLink;
+import com.young.lowin.plugins.condition.ConditionLinkAdapter;
 
 import java.util.Arrays;
 import java.util.Set;

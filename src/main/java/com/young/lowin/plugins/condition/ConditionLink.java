@@ -1,4 +1,4 @@
-package com.young.lowin.plugins;
+package com.young.lowin.plugins.condition;
 
 import com.young.lowin.annotation.Logical;
 

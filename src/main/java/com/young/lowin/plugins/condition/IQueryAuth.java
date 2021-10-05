@@ -1,4 +1,4 @@
-package com.young.lowin.plugins;
+package com.young.lowin.plugins.condition;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;

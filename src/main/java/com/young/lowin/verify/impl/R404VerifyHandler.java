@@ -1,5 +1,6 @@
 package com.young.lowin.verify.impl;
 
+import com.young.lowin.exception.sub.VerifyFailedException;
 import com.young.lowin.verify.VerifyHandler;
 import com.young.lowin.verify.VerifyObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +12,11 @@ import javax.servlet.http.HttpServletRequest;
  * Created with IntelliJ IDEA.
  * Description:
  * Author: young
- * Date: 2021-08-26
- * Time: 4:39
+ * Date: 2021-10-05
+ * Time: 17:32
  */
 @Component
-public class DefaultVerifyHandler implements VerifyHandler {
+public class R404VerifyHandler implements VerifyHandler {
 
     @Autowired
     private DefaultVerifyObject defaultVerifyObject;
@@ -26,7 +27,7 @@ public class DefaultVerifyHandler implements VerifyHandler {
     }
 
     @Override
-    public boolean verify(Object verifyKey) {
-        return true;
+    public boolean verify(Object verifyKey) throws VerifyFailedException {
+        throw new VerifyFailedException("404找不到接口");
     }
 }

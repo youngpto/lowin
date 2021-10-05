@@ -34,7 +34,9 @@ public interface VerifyHandler {
      */
     boolean verify(Object verifyKey) throws VerifyFailedException;
 
-    void verifySuccessCallBack(VerifyObject verifyObject);
+    default void verifySuccessCallBack(VerifyObject verifyObject) {
+
+    }
 
     default boolean isAllowExecution(HttpServletRequest request, HttpServletResponse response) {
         return true;
