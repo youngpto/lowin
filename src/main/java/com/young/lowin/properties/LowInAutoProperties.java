@@ -18,4 +18,8 @@ import java.util.List;
 public class LowInAutoProperties {
 
     private List<RouteRule> routeRules;
+
+    private List<String> whiteList;
+
+    private List<String> blackList;
 }
