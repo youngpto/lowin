@@ -1,10 +1,9 @@
 package com.young.lowin.model;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ReflectUtil;
 import com.young.lowin.annotation.AuthModelAnnotation;
 import com.young.lowin.annotation.Logical;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -41,6 +40,17 @@ public class AuthModel extends HashMap<String, Object> {
             return getPermissions();
         }
         return super.get(key);
+    }
+
+    public <T> T getObj(String key, Class<T> tClass) {
+        T t = ReflectUtil.newInstance(tClass);
+        return getObj(key, t);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T getObj(String key, T target) {
+        target = (T) get(key);
+        return target;
     }
 
     @SuppressWarnings("unchecked")
