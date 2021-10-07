@@ -2,10 +2,8 @@
 
 ### 介绍
 
-```
 基于springboot的简单易用认证授权框架，相对于其他认证授权框架，lowin更为轻量级，对工程的倾入程度也更低。从设计理念上抛弃了shiro等框架对复杂程序环境的支持，仅支持前后端分离的Web环境，减少了不必要的性能开支，同时又借鉴并吸取了其他框架对于认证和授权的解决方案，使用方式相近，学习成本低。
 运行环境要求: java 8+、spring boot2.x(理论上部分1.x版本也可，未测试)
-```
 
 ### 入门
 
@@ -31,7 +29,7 @@ Object getVerifyKey();
  *
  * @return 校验成功后完善的身份信息（许可证）
  */
-Object getAuthLicence();
+        Object getAuthLicence();
 ```
 
 以下为案例代码
@@ -180,6 +178,18 @@ lowin:
 
 虽然最后匹配的是所有路径，但是lowin会根据编写顺序匹配优先级较高的逻辑。
 
+同时lowin也支持在配置类中编写路由规则匹配，但优先级低于配置文件
+
+```java
+    @Bean
+    public RouteRuleFactory routeRuleFactory() {
+        RouteRule routeRule = new RouteRule("/test", "lowin");
+        return new RouteRuleFactory()
+                .addRouteRule(routeRule)
+                .addRouteRule("/user**/*", "lowin");
+    }
+```
+
 #### 鉴权
 
 鉴权是认证授权框架应当提供的最基础的功能，lowin有多种形式可以辅助开发者完成鉴权。
@@ -206,11 +216,11 @@ public class HelloService {
 ```java
 @RequiredRoles(value = "root",logical = Logical.AND)
 public String roles() {
-}
+        }
 
 @RequiredPermissions(value = "add",logical = Logical.OR)
 public String permissions() {
-}
+        }
 ```
 
 @RequiredRoles、@RequiredPermissions这两个注解只能针对方法使用，value代表对应的角色名或者权限名，类型为字符串数组，logical代表并存关系或独立存在关系。
@@ -228,17 +238,33 @@ lowin内置了AuthUtil工具类，涵盖了鉴权功能，与注解鉴权相比�
 ```java
 // 鉴权后执行逻辑，接受两个参数，前者为鉴定条件，后者为执行逻辑，无返回值
 AuthUtil.checkPermissions(
-                condition -> condition
-                        .findOne("case")
-                        .or(conditionLink -> conditionLink.notFindOne("qqq"))
-                        .and(conditionLink -> conditionLink.findOne("add")),
-                () -> System.out.println("kkk"));
+        condition -> condition
+        .findOne("case")
+        .or(conditionLink -> conditionLink.notFindOne("qqq"))
+        .and(conditionLink -> conditionLink.findOne("add")),
+        () -> System.out.println("kkk"));
 
 // 鉴权，返回鉴定结果,参数为鉴定条件
-Boolean allowAdd = AuthUtil.queryPermissions(
-                condition -> condition
-                        .findOne("case")
-                        .or(conditionLink -> conditionLink.notFindOne("qqq"))
-                        .and(conditionLink -> conditionLink.findOne("add")));
+        Boolean allowAdd = AuthUtil.queryPermissions(
+        condition -> condition
+        .findOne("case")
+        .or(conditionLink -> conditionLink.notFindOne("qqq"))
+        .and(conditionLink -> conditionLink.findOne("add")));
+```
+
+### 高级用法
+
+#### 黑白名单过滤
+
+在配置文件中可以设定某些路径加入黑白名单，黑名单表示该路径无法访问，白名单则一定放行，黑名单在所有路由匹配中优先级最高，白名单次之。
+
+```yml
+lowin:
+  black-list:
+    - /*/user
+    - /dev*/manager
+  white-list:
+    - /**/user
+    - /root/*info*
 ```
 

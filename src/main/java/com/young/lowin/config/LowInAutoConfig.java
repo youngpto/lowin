@@ -43,7 +43,7 @@ public class LowInAutoConfig {
     private final BlackListVerifyHandler blackListVerifyHandler;
 
     @Bean
-    public List<RouteRule> routeRules() {
+    public List<RouteRule> routeRules(RouteRuleFactory routeRuleFactory) {
         List<RouteRule> routeRules = new LinkedList<>();
         // 黑名单优先拦截
         if (CollUtil.isNotEmpty(lowInAutoProperties.getBlackList())) {
@@ -55,9 +55,13 @@ public class LowInAutoConfig {
             List<RouteRule> blackList = lowInAutoProperties.getWhiteList().stream().map(s -> new RouteRule(s, "defaultRule")).collect(Collectors.toList());
             routeRules.addAll(blackList);
         }
-        // 自定义认证规则处理
+        // 自定义认证规则处理 配置文件注入
         if (CollUtil.isNotEmpty(lowInAutoProperties.getRouteRules())) {
             routeRules.addAll(lowInAutoProperties.getRouteRules().stream().distinct().collect(Collectors.toList()));
+        }
+        // 自定义认证规则处理 配置类注入
+        if (CollUtil.isNotEmpty(routeRuleFactory.getRouteRules())) {
+            routeRules.addAll(routeRuleFactory.getRouteRules());
         }
         // 默认添加对所有路径进行放行
         routeRules.add(new RouteRule("/**", "lowin"));
@@ -88,6 +92,12 @@ public class LowInAutoConfig {
     @ConditionalOnMissingBean(RuleFactoryBean.class)
     public RuleFactoryBean ruleFactoryBean() {
         return new RuleFactoryBean();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(RouteRuleFactory.class)
+    public RouteRuleFactory routeRuleFactory() {
+        return new RouteRuleFactory();
     }
 
     /**
